@@ -1,40 +1,47 @@
 import studentModel from "../models/studentModel.js";
 import Response from "../helpers/response.js";
 import { hashPassword } from "../helpers/authHelper.js";
+import studentFeesModel from "../models/studentFeesModel.js";
+import userModel from "../models/userModel.js";
 
 export const createStudentController = async (req, res) => {
   try {
-    const { first_name, last_name, phone_number, date_of_joining, email, address } = req.fields;
-
+    const { first_name, last_name, phone_number, date_of_joining, email, address, monthly_fees } = req.body;
     // validation
     switch (true) {
-      case !first_name:
-        return Response(res, 404, "Name is required");
-      case !phone_number:
-        return Response(res, 404, "Phone Number is required");
-      case !date_of_joining:
-        return Response(res, 404, "Date of Joining is required");
       case !email:
-        return Response(res, 404, "Email is required");
+        return Response(res, 200, false, "Email is required");
+      case !first_name:
+        return Response(res, 200, false, "First name is required");
+      case !phone_number:
+        return Response(res, 200, false, "Phone Number is required");
+      case !date_of_joining:
+        return Response(res, 200, false, "Date of Joining is required");
+      case !monthly_fees:
+        return Response(res, 200, false, "Monthly Fees is required");
     }
 
     let user = await userModel.findOne({ email });
-
-    if (!user) {
-      const password = 123456;
-      const hashedPassword = await hashPassword(password);
-      user = await new userModel({
-        first_name,
-        email,
-        password: hashedPassword,
-        role,
-        answer,
-      }).save();
+    if (user) {
+      return Response(res, 200, false, "Student Already Present!");
     }
 
-    const product = new studentModel({ first_name, last_name, phone_number, date_of_joining, address, status: 1, user_id: user._id });
-    await product.save();
-    return Response(res, 200, "Created Student Successfully!", product);
+    const password = '123456';
+    const hashedPassword = await hashPassword(password);
+    user = await new userModel({
+      first_name,
+      email,
+      password: hashedPassword,
+      role: 'student',
+      answer: 'null',
+    }).save();
+
+    const student = new studentModel({ first_name, last_name, phone_number, date_of_joining, address, status: 1, user_id: user._id , is_active: 1});
+    await student.save();
+
+    const fees = new studentFeesModel({ monthly_fees, student_id: student._id });
+    await fees.save();
+    return Response(res, 200, true, "Created Student Successfully!");
   } catch (error) {
     return Response(
       res,

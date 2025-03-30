@@ -1,4 +1,5 @@
 import { comparePassword, hashPassword } from "../helpers/authHelper.js";
+import Response from "../helpers/response.js";
 import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
 
@@ -8,47 +9,29 @@ export const registerController = async (req, res) => {
 
     // validation
     if (!first_name) {
-      return res.send({
-        success: false,
-        message: "First Name is required",
-      });
+      return Response(res, 200, false, "First name is required");
     }
 
     if (!email) {
-      return res.send({
-        success: false,
-        message: "Email is required",
-      });
+      return Response(res, 200, false, "Email is required");
     }
 
     if (!password) {
-      return res.send({
-        success: false,
-        message: "Password is required",
-      });
+      return Response(res, 200, false, "Password is required");
     }
 
     if (!role) {
-      return res.send({
-        success: false,
-        message: "Role is required",
-      });
+      return Response(res, 200, false, "Role is required");
     }
 
     if (!answer) {
-      return res.send({
-        success: false,
-        message: "Answer is required",
-      });
+      return Response(res, 200, false, "Answer is required");
     }
 
     // make sure its unique
     const user = await userModel.findOne({ email });
     if (user) {
-      return res.send({
-        success: false,
-        message: "User already registered. Please LogIn",
-      });
+      return Response(res, 200, false, "User already registered. Please LogI");
     }
 
     // save user
@@ -62,18 +45,12 @@ export const registerController = async (req, res) => {
       answer,
     }).save();
 
-    return res.status(200).send({
-      success: true,
-      message: "User registered successfully!",
-      newUser,
-    });
+    return Response(res, 200, false, "User registered successfully!");
+
   } catch (err) {
     console.log("Error in registerController", { err });
-    res.status(500).send({
-      success: false,
-      message: "Error in registration",
-      error: err,
-    });
+    return Response(res, 200, false, "Error in registration!");
+
   }
 };
 
@@ -83,29 +60,23 @@ export const loginController = async (req, res) => {
 
     // validation
     if (!email || !password) {
-      return res.send({
-        success: false,
-        message: "Invalid email or password",
-      });
+      return Response(res, 200, false, "Invalid Email or Password!");
+
     }
 
     // check user
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return res.send({
-        success: false,
-        message: "User not found",
-      });
+      return Response(res, 200, false, "user not found!");
+
     }
 
     const match = await comparePassword(password, user.password);
 
     if (!match) {
-      return res.send({
-        success: false,
-        message: "Invalid password",
-      });
+      return Response(res, 200, false, "Invalid Password!");
+
     }
 
     // create token
@@ -141,25 +112,18 @@ export const forgotPasswordController = async (req, res) => {
     const { email, password, answer } = req.body;
 
     if (!email || !password || !answer) {
-      res.send({
-        success: false,
-        message: "Email, password and answer are required!",
-      });
+      return Response(res, 200, false, "Email, password and answer are required!");
     }
 
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.send({
-        success: false,
-        message: "Invalid email",
-      });
+      return Response(res, 200, false, "Invalid email!");
+      
     }
 
     if (user.answer !== answer) {
-      return res.send({
-        success: false,
-        message: "Incorrect answer",
-      });
+      return Response(res, 200, false, "Incorrect answer!");
+
     }
 
     const hashedPassword = await hashPassword(password);

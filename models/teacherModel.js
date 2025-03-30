@@ -25,7 +25,7 @@ const teacherSchema = new mongoose.Schema({
         required: true
     },
     date_of_joining: {
-        type: Date,
+        type: String,
         required: true
     },
     address: {
@@ -42,7 +42,7 @@ const teacherSchema = new mongoose.Schema({
             required: false
         },
         pincode: {
-            type: Number,
+            type: String,
             required: false
         }
     }
