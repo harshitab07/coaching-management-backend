@@ -10,6 +10,10 @@ const studentFeesSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    total_fees_paid: {
+        type: Number,
+        required: false
+    },
     last_paid_amount: {
         type: Number,
         required: false
