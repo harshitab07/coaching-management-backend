@@ -1,5 +1,5 @@
 import express from 'express';
-import { createStudentController, filterStudentsController, getAllStudentsController, getStudentController, getStudentFeesController,getLeftStudentsController,getActiveStudentsController,getCompletedStudentsController } from '../controllers/studentController.js';
+import { createStudentController, getAllStudentsController, getStudentController, getStudentFeesController,getLeftStudentsController,getActiveStudentsController,getCompletedStudentsController, updateStudentController } from '../controllers/studentController.js';
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.get('/get-student/:id', getStudentController);
 // get single student fees
 router.get('/get-student-fees/:id', getStudentFeesController);
 
-// filter students
-router.post('/filter-students', filterStudentsController);
+// update student
+router.post('/update-student', updateStudentController);
 
 export default router;

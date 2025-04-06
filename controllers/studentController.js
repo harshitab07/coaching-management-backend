@@ -150,27 +150,32 @@ export const getStudentFeesController = async (req, res) => {
   }
 };
 
-export const filterStudentsController = async (req, res) => {
+export const updateStudentController = async (req, res) => {
   try {
-    const { checked, radio } = req.body;
-    let args = {};
-    if (checked.length) {
-      args.category = checked;
+    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining } = req.body;
+
+    const updatedStudent = await studentModel.findByIdAndUpdate(
+      _id,
+      {
+        name, 
+        adhaar_number, 
+        father_name, 
+        phone_number, 
+        address, 
+        course, 
+        status, 
+        date_of_joining
+      },
+      { new: true }
+    );
+
+    if (!updatedStudent) {
+      return Response(res, 200, false, "Failed to update student");
     }
 
-    if (radio.length) {
-      args.price = { $gte: radio[0], $lte: radio[1] };
-    }
-    const students = await studentModel.find(args).exec();
-    return Response(res, 200, true, "Students filtered successfully!", students);
+    return Response(res, 200, true, "Successfully updated the student", updatedStudent);
   } catch (error) {
-    return Response(
-      res,
-      500,
-      false,
-      "Failed to filter students",
-      null,
-      error?.message || error
-    );
+    console.error("Error updating student:", error);
+    return Response(res, 500, false, "Server error, please try again later");
   }
-};
+}
