@@ -53,6 +53,67 @@ export const getAllStudentsController = async (req, res) => {
   }
 };
 
+export const getLeftStudentsController = async (req, res) => {
+  try {
+    const students = await studentModel.find({ status: "Left" });
+
+    return Response(res, 200, true, "Retrieved Left Students Successfully!", {
+      total: students?.length,
+      students,
+    });
+  } catch (error) {
+    return Response(
+      res,
+      500,
+      false,
+      "Failed to get Left Students",
+      null,
+      error?.message || error
+    );
+  }
+};
+
+
+export const getActiveStudentsController = async (req, res) => {
+  try {
+    const students = await studentModel.find({status: "On-Going"});
+
+    return Response(res, 200, true, "Retrieved On-Going Students Successfully!", {
+      total: students?.length,
+      students,
+    });
+  } catch (error) {
+    return Response(
+      res,
+      500,
+      false,
+      "Failed to get On-Going Students",
+      null,
+      error?.message || error
+    );
+  }
+};
+
+export const getCompletedStudentsController = async (req, res) => {
+  try {
+    const students = await studentModel.find({status: "Completed"});
+
+    return Response(res, 200, true, "Retrieved Completed Students Successfully!", {
+      total: students?.length,
+      students,
+    });
+  } catch (error) {
+    return Response(
+      res,
+      500,
+      false,
+      "Failed to get Completed Students",
+      null,
+      error?.message || error
+    );
+  }
+};
+
 export const getStudentController = async (req, res) => {
   try {
     const { id: _id } = req.params;
