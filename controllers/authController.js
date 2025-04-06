@@ -1,15 +1,15 @@
 import { comparePassword, hashPassword } from "../helpers/authHelper.js";
 import Response from "../helpers/response.js";
-import userModel from "../models/userModel.js";
+import adminModel from "../models/adminModel.js";
 import JWT from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
   try {
-    const { first_name, last_name, email, password, role, answer } = req.body;
+    const { name, email, password, answer } = req.body;
 
     // validation
-    if (!first_name) {
-      return Response(res, 200, false, "First name is required");
+    if (!name) {
+      return Response(res, 200, false, "Name is required");
     }
 
     if (!email) {
@@ -20,37 +20,34 @@ export const registerController = async (req, res) => {
       return Response(res, 200, false, "Password is required");
     }
 
-    if (!role) {
-      return Response(res, 200, false, "Role is required");
-    }
-
     if (!answer) {
       return Response(res, 200, false, "Answer is required");
     }
 
     // make sure its unique
-    const user = await userModel.findOne({ email });
-    if (user) {
-      return Response(res, 200, false, "User already registered. Please LogI");
+    const admin = await adminModel.findOne({ email });
+    if (admin) {
+      return Response(
+        res,
+        200,
+        false,
+        "Admin already registered. Please LogIn"
+      );
     }
 
-    // save user
+    // save admin
     const hashedPassword = await hashPassword(password);
-    const newUser = await new userModel({
-      first_name,
-      last_name,
+    const newAdmin = await new adminModel({
+      name,
       email,
       password: hashedPassword,
-      role,
       answer,
     }).save();
 
-    return Response(res, 200, false, "User registered successfully!");
-
+    return Response(res, 200, false, "Admin registered successfully!");
   } catch (err) {
     console.log("Error in registerController", { err });
     return Response(res, 200, false, "Error in registration!");
-
   }
 };
 
@@ -61,22 +58,19 @@ export const loginController = async (req, res) => {
     // validation
     if (!email || !password) {
       return Response(res, 200, false, "Invalid Email or Password!");
-
     }
 
     // check user
-    const user = await userModel.findOne({ email });
+    const user = await adminModel.findOne({ email });
 
     if (!user) {
-      return Response(res, 200, false, "user not found!");
-
+      return Response(res, 200, false, "Admin not found!");
     }
 
     const match = await comparePassword(password, user.password);
 
     if (!match) {
       return Response(res, 200, false, "Invalid Password!");
-
     }
 
     // create token
@@ -88,8 +82,7 @@ export const loginController = async (req, res) => {
       success: true,
       message: "Logged in successfully!",
       user: {
-        first_name: user.first_name,
-        last_name: user.last_name,
+        name: user.name,
         email: user.email,
         role: user.role,
         id: user?._id,
@@ -112,23 +105,26 @@ export const forgotPasswordController = async (req, res) => {
     const { email, password, answer } = req.body;
 
     if (!email || !password || !answer) {
-      return Response(res, 200, false, "Email, password and answer are required!");
+      return Response(
+        res,
+        200,
+        false,
+        "Email, password and answer are required!"
+      );
     }
 
-    const user = await userModel.findOne({ email });
+    const user = await adminModel.findOne({ email });
     if (!user) {
       return Response(res, 200, false, "Invalid email!");
-      
     }
 
     if (user.answer !== answer) {
       return Response(res, 200, false, "Incorrect answer!");
-
     }
 
     const hashedPassword = await hashPassword(password);
 
-    await userModel.findByIdAndUpdate(user._id, { password: hashedPassword });
+    await adminModel.findByIdAndUpdate(user._id, { password: hashedPassword });
     res.status(200).send({
       success: true,
       message: "Password changed successfully",
@@ -146,8 +142,8 @@ export const profileController = async (req, res) => {
   try {
     const { email, address, phone, id: _id } = req.body;
 
-    const user = await userModel.findById(req.user._id);
-    const updatedUser = await userModel.findByIdAndUpdate(
+    const user = await adminModel.findById(req.user._id);
+    const updatedUser = await adminModel.findByIdAndUpdate(
       req.user._id,
       { address: address || user?.address, phone: phone || user?.phone },
       { new: true }

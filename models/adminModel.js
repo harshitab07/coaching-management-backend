@@ -1,29 +1,25 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
-        required: true
+const adminSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
-    is_active: {
-        type: Number,
-        required: true
+    password: {
+        type: String,
+        require: true,
     },
-    first_name: {
+    name: {
         type: String,
         trim: true,
         required: true
     },
-    last_name: {
+    answer: {
         type: String,
         trim: true,
-        required: false
-    },
-    phone_number: {
-        type: String,
-        required: false
+        required: true
     }
 }, {timestamps: true});
 
-export default mongoose.model('users', userSchema);
+export default mongoose.model('admins', adminSchema);

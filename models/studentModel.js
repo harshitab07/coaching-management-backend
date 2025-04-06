@@ -1,27 +1,27 @@
 import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema({
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
-        required: true
-    },
-    is_active: {
-        type: Number,
-        required: true
-    },
-    first_name: {
+    name: {
         type: String,
         trim: true,
         required: true
     },
-    last_name: {
+    adhaar_number: {
         type: String,
         trim: true,
-        required: false
+        required: true
+    },
+    father_name: {
+        type: String,
+        required: true
     },
     phone_number: {
         type: String,
+        required: false
+    },
+    course: {
+        type: String,
+        trim: true,
         required: true
     },
     date_of_joining: {
@@ -29,22 +29,19 @@ const studentSchema = new mongoose.Schema({
         required: true
     },
     address: {
-        street: {
-            type: String,
-            required: false
-        },
-        city: {
-            type: String,
-            required: false
-        },
-        state: {
-            type: String,
-            required: false
-        },
-        pincode: {
-            type: String,
-            required: false
-        }
+        type: String,
+        trim: true,
+        required: false
+    },
+    status: {
+        type: String,
+        enum: ['On-Going', 'Completed', 'Left'],
+        required: true
+    },
+    admin_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'admins',
+        required: true
     }
 }, {timestamps: true});
 

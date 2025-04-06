@@ -6,22 +6,24 @@ const studentFeesSchema = new mongoose.Schema({
         ref: 'students',
         required: true
     },
-    monthly_fees: {
+    year: {
         type: Number,
         required: true
     },
-    total_fees_paid: {
-        type: Number,
-        required: false
-    },
-    last_paid_amount: {
-        type: Number,
-        required: false
-    },
-    last_paid_date: {
-        type: Date,
-        required: false
-    },
-}, {timestamps: true});
+    fees: {
+        january: { type: Number, default: 0 },
+        february: { type: Number, default: 0 },
+        march: { type: Number, default: 0 },
+        april: { type: Number, default: 0 },
+        may: { type: Number, default: 0 },
+        june: { type: Number, default: 0 },
+        july: { type: Number, default: 0 },
+        august: { type: Number, default: 0 },
+        september: { type: Number, default: 0 },
+        october: { type: Number, default: 0 },
+        november: { type: Number, default: 0 },
+        december: { type: Number, default: 0 },
+    }
+}, { timestamps: true });
 
 export default mongoose.model('students_fees', studentFeesSchema);
