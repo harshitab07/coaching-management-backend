@@ -21,6 +21,9 @@ export const createStudentController = async (req, res) => {
 
     const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course});
     await student.save();
+
+    const studentFess = new studentFeesModel({student_id: student._id});
+    await studentFess.save();
     return Response(res, 200, true, "Created Student Successfully!");
   } catch (error) {
     return Response(
@@ -177,5 +180,20 @@ export const updateStudentController = async (req, res) => {
   } catch (error) {
     console.error("Error updating student:", error);
     return Response(res, 500, false, "Server error, please try again later");
+  }
+}
+
+export const updateStudentFeesController = async (req, res) => {
+  try {
+    const {_id, month, fees} = req.body;
+
+    const studentFees = await studentFeesModel.findOne({ student_id: _id });
+    studentFees.fees[month] = fees;
+    await studentFees.save();
+
+    return Response(res, 200, true, "Successfully updated the student's fees");
+  } catch (error) {
+    console.error("Error updating student's fees:", error);
+    return Response(res, 500, false, "Server error, please try again later")
   }
 }

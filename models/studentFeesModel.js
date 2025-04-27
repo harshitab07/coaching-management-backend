@@ -6,23 +6,19 @@ const studentFeesSchema = new mongoose.Schema({
         ref: 'students',
         required: true
     },
-    year: {
-        type: Number,
-        required: true
-    },
     fees: {
-        january: { type: Number, default: 0 },
-        february: { type: Number, default: 0 },
-        march: { type: Number, default: 0 },
-        april: { type: Number, default: 0 },
-        may: { type: Number, default: 0 },
-        june: { type: Number, default: 0 },
-        july: { type: Number, default: 0 },
-        august: { type: Number, default: 0 },
-        september: { type: Number, default: 0 },
-        october: { type: Number, default: 0 },
-        november: { type: Number, default: 0 },
-        december: { type: Number, default: 0 },
+        January: { type: Number, default: 0 },
+        February: { type: Number, default: 0 },
+        March: { type: Number, default: 0 },
+        April: { type: Number, default: 0 },
+        May: { type: Number, default: 0 },
+        June: { type: Number, default: 0 },
+        July: { type: Number, default: 0 },
+        August: { type: Number, default: 0 },
+        September: { type: Number, default: 0 },
+        October: { type: Number, default: 0 },
+        November: { type: Number, default: 0 },
+        December: { type: Number, default: 0 },
     }
 }, { timestamps: true });
 
