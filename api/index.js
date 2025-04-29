@@ -24,4 +24,4 @@ app.get('/', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/students', studentsRoutes);
 
-export const handler = serverless(app);
+export default serverless(app);
