@@ -9,7 +9,18 @@ import authRoutes from '../routes/authRoute.js';
 import studentsRoutes from '../routes/studentRoute.js';
 
 dotenv.config();
-connectDatabase();
+
+const connectToDb = async () => {
+    try {
+      await connectDatabase();
+      console.log("Database connected successfully!");
+    } catch (error) {
+      console.error("Error connecting to database:", error.message);
+      throw error; // Will cause the function to fail gracefully
+    }
+  };
+  
+connectToDb();
 
 const app = express();
 
