@@ -188,7 +188,7 @@ export const updateStudentFeesController = async (req, res) => {
     const {_id, month, fees} = req.body;
 
     const studentFees = await studentFeesModel.findOne({ student_id: _id });
-    studentFees.fees[month] = fees;
+    studentFees.fees[month] = Number(fees);
     await studentFees.save();
 
     return Response(res, 200, true, "Successfully updated the student's fees");

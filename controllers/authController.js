@@ -44,7 +44,7 @@ export const registerController = async (req, res) => {
       answer,
     }).save();
 
-    return Response(res, 200, false, "Admin registered successfully!");
+    return Response(res, 200, true, "Admin registered successfully!");
   } catch (err) {
     console.log("Error in registerController", { err });
     return Response(res, 200, false, "Error in registration!");
@@ -80,6 +80,7 @@ export const loginController = async (req, res) => {
 
     return res.status(200).send({
       success: true,
+      isResultCorrect: true,
       message: "Logged in successfully!",
       user: {
         name: user.name,
