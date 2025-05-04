@@ -160,7 +160,7 @@ export const getStudentFeesController = async (req, res) => {
 
 export const updateStudentController = async (req, res) => {
   try {
-    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining } = req.body;
+    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining, admission_fees, gender } = req.body;
 
     const updatedStudent = await studentModel.findByIdAndUpdate(
       _id,
@@ -172,7 +172,9 @@ export const updateStudentController = async (req, res) => {
         address, 
         course, 
         status, 
-        date_of_joining
+        date_of_joining,
+        admission_fees,
+        gender
       },
       { new: true }
     );
