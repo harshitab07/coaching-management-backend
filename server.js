@@ -12,7 +12,7 @@ connectDatabase();
 
 const app = express();
 
-const allowedOrigins = ['https://coaching-management-app-test.netlify.app'];
+const allowedOrigins = ['https://coaching-management-app.netlify.app/login'];
 
 app.use(cors({
   origin: allowedOrigins,
