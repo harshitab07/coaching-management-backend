@@ -12,7 +12,13 @@ connectDatabase();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ['https://coaching-management-app-test.netlify.app'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,  // only if you're using cookies or sessions
+}));
+
 app.use(express.json());
 app.use(morgan('dev'));
 
