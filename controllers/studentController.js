@@ -24,7 +24,7 @@ export const createStudentController = async (req, res) => {
 
     const studentFess = new studentFeesModel({student_id: student._id});
     await studentFess.save();
-    return Response(res, 200, true, "Created Student Successfully!");
+    return Response(res, 200, true, "Created Student Successfully!", student);
   } catch (error) {
     return Response(
       res,
