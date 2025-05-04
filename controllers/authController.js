@@ -94,6 +94,7 @@ export const loginController = async (req, res) => {
     console.log("Error in loginController", { err });
     res.status(500).send({
       success: false,
+      isResultCorrect: false,
       message: "Error in login",
       error: err,
     });
@@ -128,11 +129,13 @@ export const forgotPasswordController = async (req, res) => {
     await adminModel.findByIdAndUpdate(user._id, { password: hashedPassword });
     res.status(200).send({
       success: true,
+      isResultCorrect: true,
       message: "Password changed successfully",
     });
   } catch (error) {
     res.status(500).send({
       success: false,
+      isResultCorrect: false,
       message: "Failed to change password",
       error,
     });
