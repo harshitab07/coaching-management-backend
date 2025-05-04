@@ -4,7 +4,7 @@ import studentFeesModel from "../models/studentFeesModel.js";
 
 export const createStudentController = async (req, res) => {
   try {
-    const { name, adhaar_number, father_name, date_of_joining, address, course, status, phone_number, admin_id } = req.body;
+    const { name, adhaar_number, father_name, date_of_joining, address, course, status, phone_number, admin_id, gender, admission_fees } = req.body;
     // validation
     switch (true) {
       case !name:
@@ -19,7 +19,12 @@ export const createStudentController = async (req, res) => {
         return Response(res, 200, false, "Course is required");
     }
 
-    const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course});
+    const existingStudent = await studentModel.findOne({ adhaar_number });
+    if (existingStudent) {
+      return Response(res, 200, false, "Student with this Aadhaar number already exists");
+    }
+
+    const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course, gender, admission_fees});
     await student.save();
 
     const studentFess = new studentFeesModel({student_id: student._id});

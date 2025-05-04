@@ -9,6 +9,7 @@ const studentSchema = new mongoose.Schema({
     adhaar_number: {
         type: String,
         trim: true,
+        unique: true,
         required: true
     },
     father_name: {
@@ -42,7 +43,16 @@ const studentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'admins',
         required: true
-    }
+    },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female'],
+        required: false
+    },
+    admission_fees: {
+        type: String,
+        required: true
+    },
 }, {timestamps: true});
 
 export default mongoose.model('students', studentSchema);

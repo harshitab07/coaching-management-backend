@@ -111,7 +111,7 @@ export const forgotPasswordController = async (req, res) => {
         res,
         200,
         false,
-        "Email, password and answer are required!"
+        "Please fill the form!"
       );
     }
 
