@@ -91,6 +91,8 @@ export const deleteStudentController = async (req, res) => {
       return Response(res, 200, false, 'Unable to find student');
     }
 
+    await studentFeesModel.findOneAndDelete({student_id: _id});
+
     return Response(res, 200, true, 'Student Deleted');
   } catch (error) {
     return Response(res, 404, false, 'Unable to delete student', null, error);
