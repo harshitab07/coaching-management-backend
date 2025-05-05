@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema({
+    serial_number: {
+        type: Number,
+        required: true
+    },
     name: {
         type: String,
         trim: true,
@@ -22,7 +26,7 @@ const studentSchema = new mongoose.Schema({
     },
     course: {
         type: String,
-        trim: true,
+        enum: ['3 Months', '6 Months', '1 Year'],
         required: true
     },
     date_of_joining: {

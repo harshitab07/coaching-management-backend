@@ -4,7 +4,7 @@ import studentFeesModel from "../models/studentFeesModel.js";
 
 export const createStudentController = async (req, res) => {
   try {
-    const { name, adhaar_number, father_name, date_of_joining, address, course, status, phone_number, admin_id, gender, admission_fees } = req.body;
+    const { name, adhaar_number, father_name, date_of_joining, address, course, status, phone_number, admin_id, gender, admission_fees, serial_number } = req.body;
     // validation
     switch (true) {
       case !name:
@@ -15,8 +15,10 @@ export const createStudentController = async (req, res) => {
         return Response(res, 200, false, "Adhaar Number is required");
       case !date_of_joining:
         return Response(res, 200, false, "Date of Joining is required");
-      case !course:
-        return Response(res, 200, false, "Course is required");
+      case !admission_fees:
+        return Response(res, 200, false, "Admission Fees is required");
+      case !serial_number:
+        return Response(res, 200, false, "Serial Number is required");
     }
 
     const existingStudent = await studentModel.findOne({ adhaar_number });
@@ -24,7 +26,12 @@ export const createStudentController = async (req, res) => {
       return Response(res, 200, false, "Student with this Aadhaar number already exists");
     }
 
-    const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course, gender, admission_fees});
+    const existingSerialStudent = await studentModel.findOne({ serial_number });
+    if (existingSerialStudent) {
+      return Response(res, 200, false, "Student with this Serial number already exists");
+    }
+
+    const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course, gender, admission_fees, serial_number});
     await student.save();
 
     const studentFess = new studentFeesModel({student_id: student._id});
@@ -40,6 +47,55 @@ export const createStudentController = async (req, res) => {
     );
   }
 };
+
+export const updateStudentController = async (req, res) => {
+  try {
+    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining, admission_fees, gender, serial_number } = req.body;
+  
+    const updatedStudent = await studentModel.findByIdAndUpdate(
+      _id,
+      {
+        name, 
+        adhaar_number, 
+        father_name, 
+        phone_number, 
+        address, 
+        course, 
+        status, 
+        date_of_joining,
+        admission_fees,
+        gender,
+        serial_number
+      },
+      { new: true }
+    );
+
+    if (!updatedStudent) {
+      return Response(res, 200, false, "Failed to update student");
+    }
+
+    return Response(res, 200, true, "Successfully updated the student", updatedStudent);
+  } catch (error) {
+    console.error("Error updating student:", error);
+    return Response(res, 500, false, "Server error, please try again later");
+  }
+}
+
+export const deleteStudentController = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    const deletedStudent = await studentModel.findByIdAndDelete(_id);
+
+    if (!deletedStudent) {
+      return Response(res, 200, false, 'Unable to find student');
+    }
+
+    return Response(res, 200, true, 'Student Deleted');
+  } catch (error) {
+    return Response(res, 404, false, 'Unable to delete student', null, error);
+  }
+}
 
 export const getAllStudentsController = async (req, res) => {
   try {
@@ -80,7 +136,6 @@ export const getLeftStudentsController = async (req, res) => {
     );
   }
 };
-
 
 export const getActiveStudentsController = async (req, res) => {
   try {
@@ -158,38 +213,6 @@ export const getStudentFeesController = async (req, res) => {
   }
 };
 
-export const updateStudentController = async (req, res) => {
-  try {
-    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining, admission_fees, gender } = req.body;
-
-    const updatedStudent = await studentModel.findByIdAndUpdate(
-      _id,
-      {
-        name, 
-        adhaar_number, 
-        father_name, 
-        phone_number, 
-        address, 
-        course, 
-        status, 
-        date_of_joining,
-        admission_fees,
-        gender
-      },
-      { new: true }
-    );
-
-    if (!updatedStudent) {
-      return Response(res, 200, false, "Failed to update student");
-    }
-
-    return Response(res, 200, true, "Successfully updated the student", updatedStudent);
-  } catch (error) {
-    console.error("Error updating student:", error);
-    return Response(res, 500, false, "Server error, please try again later");
-  }
-}
-
 export const updateStudentFeesController = async (req, res) => {
   try {
 
@@ -204,6 +227,9 @@ export const updateStudentFeesController = async (req, res) => {
     // Conditionally update fee
     if (fees !== undefined && fees !== null && !isNaN(Number(fees))) {
       studentFees.fees[month] = Number(fees);
+      if (fees == 0) {
+        studentFees.paymentDates[month] = null;
+      }
     }
 
     // Conditionally update date
@@ -213,7 +239,7 @@ export const updateStudentFeesController = async (req, res) => {
 
     await studentFees.save();
 
-    return Response(res, 200, true, "Successfully updated the student's fees and payment date");
+    return Response(res, 200, true, "Successfully updated the student's fees and payment date", studentFees);
   } catch (error) {
     console.error("Error updating student's fees:", error);
     return Response(res, 500, false, "Server error, please try again later");

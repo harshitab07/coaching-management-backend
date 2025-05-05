@@ -1,5 +1,5 @@
 import express from 'express';
-import { createStudentController, getAllStudentsController, getStudentController, getStudentFeesController,getLeftStudentsController,getActiveStudentsController,getCompletedStudentsController, updateStudentController, updateStudentFeesController } from '../controllers/studentController.js';
+import { createStudentController, getAllStudentsController, getStudentController, getStudentFeesController,getLeftStudentsController,getActiveStudentsController,getCompletedStudentsController, updateStudentController, updateStudentFeesController, deleteStudentController } from '../controllers/studentController.js';
 
 const router = express.Router();
 
@@ -21,6 +21,9 @@ router.get('/get-student-fees/:id', getStudentFeesController);
 // update student
 router.post('/update-student', updateStudentController);
 router.post('/update-student-fees', updateStudentFeesController);
+
+// delete student
+router.post('/delete-student', deleteStudentController);
 
 
 export default router;
