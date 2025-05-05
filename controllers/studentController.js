@@ -192,15 +192,30 @@ export const updateStudentController = async (req, res) => {
 
 export const updateStudentFeesController = async (req, res) => {
   try {
-    const {_id, month, fees} = req.body;
+
+
+    const { _id, month, fees, date } = req.body;
 
     const studentFees = await studentFeesModel.findOne({ student_id: _id });
-    studentFees.fees[month] = Number(fees);
+    if (!studentFees) {
+      return Response(res, 404, false, "Student fees record not found");
+    }
+
+    // Conditionally update fee
+    if (fees !== undefined && fees !== null && !isNaN(Number(fees))) {
+      studentFees.fees[month] = Number(fees);
+    }
+
+    // Conditionally update date
+    if (date && !isNaN(Date.parse(date))) {
+      studentFees.paymentDates[month] = new Date(date);
+    }
+
     await studentFees.save();
 
-    return Response(res, 200, true, "Successfully updated the student's fees");
+    return Response(res, 200, true, "Successfully updated the student's fees and payment date");
   } catch (error) {
     console.error("Error updating student's fees:", error);
-    return Response(res, 500, false, "Server error, please try again later")
+    return Response(res, 500, false, "Server error, please try again later");
   }
-}
+};
