@@ -12,7 +12,7 @@ connectDatabase();
 const app = express();
 
 const allowedOrigins = [
-  "https://coaching-management-app.netlify.app",
+  "https://coaching-management-app-test.netlify.app",
   "http://localhost:5173",
 ];
 
