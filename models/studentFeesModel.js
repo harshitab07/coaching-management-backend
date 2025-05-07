@@ -33,7 +33,22 @@ const studentFeesSchema = new mongoose.Schema({
     October: { type: Date, default: null },
     November: { type: Date, default: null },
     December: { type: Date, default: null },
+  },
+  remarks: {
+    January: { type: String, default: "" },
+    February: { type: String, default: "" },
+    March: { type: String, default: "" },
+    April: { type: String, default: "" },
+    May: { type: String, default: "" },
+    June: { type: String, default: "" },
+    July: { type: String, default: "" },
+    August: { type: String, default: "" },
+    September: { type: String, default: "" },
+    October: { type: String, default: "" },
+    November: { type: String, default: "" },
+    December: { type: String, default: "" },
   }
+  
 }, { timestamps: true });
 
 export default mongoose.model('students_fees', studentFeesSchema);

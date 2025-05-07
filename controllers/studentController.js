@@ -217,9 +217,7 @@ export const getStudentFeesController = async (req, res) => {
 
 export const updateStudentFeesController = async (req, res) => {
   try {
-
-
-    const { _id, month, fees, date } = req.body;
+    const { _id, month, fees, date, remark } = req.body;
 
     const studentFees = await studentFeesModel.findOne({ student_id: _id });
     if (!studentFees) {
@@ -237,6 +235,17 @@ export const updateStudentFeesController = async (req, res) => {
     // Conditionally update date
     if (date && !isNaN(Date.parse(date))) {
       studentFees.paymentDates[month] = new Date(date);
+    }
+
+    // Conditionally update remark
+    if (remark !== undefined && remark !== null) {
+      // Check if remark is a string and not empty
+      if (typeof remark === 'string' && remark.trim() !== '') {
+        studentFees.remarks[month] = remark;
+      } else {
+        // If the remark is empty, you could either set it as an empty string or leave it unchanged
+        studentFees.remarks[month] = ""; // or keep the existing value
+      }
     }
 
     await studentFees.save();
