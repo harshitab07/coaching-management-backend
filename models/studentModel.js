@@ -57,6 +57,10 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    monthly_fees: {
+        type: Number,
+        required: true
+    },
 }, {timestamps: true});
 
 export default mongoose.model('students', studentSchema);

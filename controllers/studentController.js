@@ -4,7 +4,7 @@ import studentFeesModel from "../models/studentFeesModel.js";
 
 export const createStudentController = async (req, res) => {
   try {
-    const { name, adhaar_number, father_name, date_of_joining, address, course, status, phone_number, admin_id, gender, admission_fees, serial_number } = req.body;
+    const { name, adhaar_number, father_name, date_of_joining, address, course, status, phone_number, admin_id, gender, admission_fees, serial_number, monthly_fees } = req.body;
     // validation
     switch (true) {
       case !name:
@@ -19,6 +19,8 @@ export const createStudentController = async (req, res) => {
         return Response(res, 200, false, "Admission Fees is required");
       case !serial_number:
         return Response(res, 200, false, "Serial Number is required");
+      case !monthly_fees:
+        return Response(res, 200, false, "Monthly Fess is required");
     }
 
     const existingStudent = await studentModel.findOne({ adhaar_number });
@@ -31,7 +33,8 @@ export const createStudentController = async (req, res) => {
       return Response(res, 200, false, "Student with this Serial number already exists");
     }
 
-    const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course, gender, admission_fees, serial_number});
+    const monthly_fees_number = +monthly_fees;
+    const student = new studentModel({ name, father_name, adhaar_number, phone_number, date_of_joining, address, status, admin_id , course, gender, admission_fees, serial_number, monthly_fees: monthly_fees_number});
     await student.save();
 
     const studentFess = new studentFeesModel({student_id: student._id});
@@ -50,8 +53,9 @@ export const createStudentController = async (req, res) => {
 
 export const updateStudentController = async (req, res) => {
   try {
-    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining, admission_fees, gender, serial_number } = req.body;
+    const { _id, name, adhaar_number, father_name, phone_number, address, course, status,date_of_joining, admission_fees, gender, serial_number, monthly_fees } = req.body;
   
+    const monthly_fees_number = +monthly_fees;
     const updatedStudent = await studentModel.findByIdAndUpdate(
       _id,
       {
@@ -65,7 +69,8 @@ export const updateStudentController = async (req, res) => {
         date_of_joining,
         admission_fees,
         gender,
-        serial_number
+        serial_number,
+        monthly_fees: monthly_fees_number
       },
       { new: true }
     );
