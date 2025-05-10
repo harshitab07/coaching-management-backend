@@ -11,11 +11,16 @@ connectDatabase();
 
 const app = express();
 
-const allowedOrigins = [
-  "https://coaching-management-app-test.netlify.app",
-  "http://localhost:5173",
-];
+let allowedOrigins;
 
+if (process.env.DEV_MODE === "development") {
+  allowedOrigins = [
+    "https://coaching-management-app-test.netlify.app",
+    "http://localhost:5173",
+  ];
+} else {
+  allowedOrigins = ["https://coaching-management-app.netlify.app"];
+}
 app.use(
   cors({
     origin: allowedOrigins,
