@@ -229,6 +229,7 @@ export const updateStudentFeesController = async (req, res) => {
       studentFees.fees[month] = Number(fees);
       if (fees == 0) {
         studentFees.paymentDates[month] = null;
+        studentFees.remarks[month] = null;
       }
     }
 
