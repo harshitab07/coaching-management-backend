@@ -1,5 +1,6 @@
 import express from 'express';
 import { createStudentController, getAllStudentsController, getStudentController, getStudentFeesController,getLeftStudentsController,getActiveStudentsController,getCompletedStudentsController, updateStudentController, updateStudentFeesController, deleteStudentController } from '../controllers/studentController.js';
+import { getPendingFeesForTheMonth } from '../controllers/feesController.js';
 
 const router = express.Router();
 
@@ -25,5 +26,7 @@ router.post('/update-student-fees', updateStudentFeesController);
 // delete student
 router.post('/delete-student', deleteStudentController);
 
+// pending fees
+router.post('/pending-fees-for-month', getPendingFeesForTheMonth);
 
 export default router;

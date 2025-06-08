@@ -1,6 +1,7 @@
 import studentModel from "../models/studentModel.js";
 import Response from "../helpers/response.js";
 import studentFeesModel from "../models/studentFeesModel.js";
+import { getStudentFees } from "../helpers/studentFees.js";
 
 export const createStudentController = async (req, res) => {
   try {
@@ -205,7 +206,7 @@ export const getStudentController = async (req, res) => {
 export const getStudentFeesController = async (req, res) => {
   try {
     const { id: _id } = req.params;
-    const studentFees = await studentFeesModel.findOne({student_id: _id});
+    const studentFees = await getStudentFees(_id);
 
     return Response(res, 200, true, "Retrieved Student Fees Successfully!", studentFees);
   } catch (error) {
