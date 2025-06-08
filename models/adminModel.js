@@ -19,7 +19,15 @@ const adminSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true
+    },
+    role: { 
+        type: String, 
+        default: 'admin' 
+    },
+    is_super_admin: { 
+        type: Boolean, 
+        default: false 
     }
-}, {timestamps: true});
+}, { timestamps: true });
 
 export default mongoose.model('admins', adminSchema);
